@@ -1,0 +1,70 @@
+Package Temp;
+
+Helpers
+  digit = ['0'..'9'] ;
+  lcase = ['a'..'z'] ;
+  ucase = ['A'..'Z'] ;
+  letter = lcase | ucase ;
+
+Tokens
+  iconst = digit+ ;
+  blank = (' '|13|10)+ ;
+  int = 'int' ;
+  if = 'if' ;
+  while = 'while' ;
+  read = 'read' ;
+  print = 'print' ;
+  window = 'window' ;
+  semi = ';' ;
+  assign = '=' ;
+  add = '+' ;
+  sub = '-' ;
+  aster = '*' ;
+  slash = '/' ;
+  lt = '<' ;
+  gt = '>' ;
+  lbra = '{' ;
+  rbra = '}' ;
+  lpar = '(' ;
+  rpar = ')' ;
+  lsbr = '[' ;
+  rsbr = ']' ;
+  ident = letter (letter|digit)* ;
+
+Ignored Tokens
+  blank;
+
+Productions
+  prog = {stlist} stlist
+       ;
+  stlist = {stat} stlist stat
+         | {empty}
+         ;
+  stat = {idcl}    int ident semi
+       | {adcl}    int ident lsbr iconst rsbr semi
+       | {assign}  ident assign expr semi
+       | {aassign} ident lsbr [idx]:expr rsbr assign expr semi
+       | {read}    read ident semi
+       | {print}   print expr semi
+       | {if}      if lpar expr rpar stat
+       | {while}   while lpar expr rpar stat
+       | {block}   lbra stlist rbra
+       | {window}   window semi
+       ;
+  expr = {gt}  [left]:nexp gt [right]:nexp
+       | {lt}  [left]:nexp lt [right]:nexp
+       | {one} nexp
+       ;
+  nexp = {add}  nexp add term
+       | {sub}  nexp sub term
+       | {one}  term
+       ;
+  term = {mul}  term aster fact
+       | {div}  term slash fact
+       | {one}  fact
+       ;
+  fact = {iconst} iconst
+       | {ident}  ident
+       | {aref}   ident lsbr expr rsbr
+       | {one}    lpar expr rpar
+       ;

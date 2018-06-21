@@ -1,0 +1,10 @@
+int max;
+read max;
+int x0;
+int x1;
+x0 = 0;
+x1 = 10;
+while(x0 < max) {
+  print x0;
+  x0 = x0 + 1;
+}
